@@ -37,7 +37,7 @@ public class CameraActivity extends BaseActivity<ActivityCameraBinding> {
     }
 
     private void startPreview() {
-        camera = Camera.open();
+        camera = Camera.open(1);
         try {
             camera.setPreviewDisplay(viewBinding.surfvCamera.getHolder());
             camera.setDisplayOrientation(90);
