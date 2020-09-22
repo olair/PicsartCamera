@@ -4,7 +4,11 @@ import android.hardware.Camera;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.olair.utils.SizeUtil;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by olair on 20.9.12.
@@ -17,8 +21,9 @@ public class Camera1Lens implements CameraLens {
 
     private final Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
 
+    private Camera.Parameters mParameters;
+
     private SurfaceView mSurfaceView;
-    private SurfaceHolder mSurfaceViewHolder;
 
     public Camera1Lens(int mCameraId) {
         this.mCameraId = mCameraId;
@@ -28,16 +33,18 @@ public class Camera1Lens implements CameraLens {
     @Override
     public void open(SurfaceView surfaceView) {
         this.mSurfaceView = surfaceView;
-        this.mSurfaceViewHolder = surfaceView.getHolder();
+        SurfaceHolder surfaceViewHolder = surfaceView.getHolder();
 
         mCamera = Camera.open(mCameraId);
-        mSurfaceViewHolder.addCallback(mSurfaceHolderCallback);
+        mParameters = mCamera.getParameters();
 
         try {
-            mCamera.setPreviewDisplay(mSurfaceViewHolder);
+            mCamera.setPreviewDisplay(surfaceViewHolder);
+            mCamera.startPreview();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
     }
 
@@ -48,24 +55,31 @@ public class Camera1Lens implements CameraLens {
 
     @Override
     public ResolutionSwitcher canSwitchResolution() {
-        return null;
+        return resolutionSwitcher;
     }
 
-    SurfaceHolder.Callback mSurfaceHolderCallback = new SurfaceHolder.Callback() {
+    private ResolutionSwitcher resolutionSwitcher = new ResolutionSwitcher() {
         @Override
-        public void surfaceCreated(SurfaceHolder holder) {
-
+        public void switchTo(Resolution resolution, OperatorListener<Resolution> listener) {
         }
 
         @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
+        public List<Resolution> getPreviewSizeList() {
+            List<Camera.Size> sizeList = mParameters.getSupportedPreviewSizes();
+            return Resolution.toResolutionList(SizeUtil.toSizeList(sizeList), true);
         }
 
         @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {
-
+        public List<Resolution> getVideoSizeList() {
+            return new ArrayList<Resolution>() {
+                {
+                    add(Resolution.RESOLUTION_1080x720);
+                    add(Resolution.RESOLUTION_1920x1080);
+                    add(Resolution.RESOLUTION_2560x1440);
+                }
+            };
         }
+
     };
 
 }

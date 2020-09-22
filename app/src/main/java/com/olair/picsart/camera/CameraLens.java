@@ -2,6 +2,8 @@ package com.olair.picsart.camera;
 
 import android.view.SurfaceView;
 
+import java.util.List;
+
 
 /**
  * 一个手机镜头
@@ -32,5 +34,21 @@ public interface CameraLens {
      * 分辨率切换
      */
     interface ResolutionSwitcher {
+
+        void switchTo(Resolution resolution, OperatorListener<Resolution> listener);
+
+        List<Resolution> getPreviewSizeList();
+
+        List<Resolution> getVideoSizeList();
+
     }
+
+    interface OperatorListener<T> {
+
+        void onSuccess(T param);
+
+        void onError(Throwable throwable);
+    }
+
+
 }

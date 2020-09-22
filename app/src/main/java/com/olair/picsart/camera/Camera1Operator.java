@@ -9,26 +9,22 @@ public class Camera1Operator {
 
     interface SurfaceHolderOperator {
         int SURFACE_CREATE = 0;
-        int SURFACE_CHANGE = 2;
+        int SURFACE_CHANGE = 1;
+        int SURFACE_DESTROYED = 2;
     }
 
-    void startPreview(SurfaceHolder holder) {
-        holder.addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                holder.removeCallback(this);
-            }
+    public static class SurfaceChangeParam {
+        public final SurfaceHolder surfaceHolder;
+        public final int format;
+        public final int width;
+        public final int height;
 
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-
-            }
-        });
+        public SurfaceChangeParam(SurfaceHolder surfaceHolder, int format, int width, int height) {
+            this.surfaceHolder = surfaceHolder;
+            this.format = format;
+            this.width = width;
+            this.height = height;
+        }
     }
 
 }
