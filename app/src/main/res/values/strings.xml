@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Picsart Camera</string>
+    <string name="resolution_4K">4K</string>
+    <string name="resolution_2K">2K</string>
+    <string name="resolution_1080P">1080P</string>
+    <string name="resolution_720P">720P</string>
+    <string name="resolution_support">暂不支持</string>
 </resources>

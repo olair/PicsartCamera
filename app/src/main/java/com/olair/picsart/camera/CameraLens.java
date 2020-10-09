@@ -2,6 +2,8 @@ package com.olair.picsart.camera;
 
 import android.view.SurfaceView;
 
+import java.util.List;
+
 
 /**
  * 一个手机镜头
@@ -14,7 +16,7 @@ public interface CameraLens {
      *
      * @param surfaceView 图传目标
      */
-    void open(SurfaceView surfaceView);
+    void open(SurfaceView surfaceView, OnProcedureCallback<ResolutionSwitcher> onProcedureCallback);
 
     /**
      * 关闭图传
@@ -32,5 +34,26 @@ public interface CameraLens {
      * 分辨率切换
      */
     interface ResolutionSwitcher {
+
+        void switchTo(Resolution resolution, OperatorCallback<Resolution> callback);
+
+        List<Resolution> getPreviewSizeList();
+
+        List<Resolution> getVideoSizeList();
+
     }
+
+    interface OnProcedureCallback<T> {
+        void onProcedure(T operator);
+    }
+
+    interface OperatorCallback<T> {
+
+        void onSuccess(T param);
+
+        default void onError(Throwable throwable) {
+        }
+    }
+
+
 }
