@@ -1,6 +1,7 @@
 package com.olair.picsart.camera;
 
 import android.hardware.Camera;
+import android.os.Handler;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -13,30 +14,39 @@ import java.util.List;
 /**
  * Created by olair on 20.9.12.
  */
+@SuppressWarnings("deprecation")
 public class Camera1Lens implements CameraLens {
 
     private int mCameraId;
 
+    private int mScreenOrientation;
+
+    private Handler mHandler;
+
     private Camera mCamera;
 
-    private final Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+    private final Camera.CameraInfo mCameraInfo = new Camera.CameraInfo();
 
     private Camera.Parameters mParameters;
 
     private SurfaceView mSurfaceView;
 
-    public Camera1Lens(int mCameraId) {
+    public Camera1Lens(int mCameraId, int screenOrientation, Handler handler) {
         this.mCameraId = mCameraId;
-        Camera.getCameraInfo(mCameraId, cameraInfo);
+        this.mScreenOrientation = screenOrientation;
+        this.mHandler = handler;
+        Camera.getCameraInfo(mCameraId, mCameraInfo);
     }
 
     @Override
-    public void open(SurfaceView surfaceView) {
+    public void open(SurfaceView surfaceView, OnProcedureCallback<ResolutionSwitcher> onProcedureCallback) {
         this.mSurfaceView = surfaceView;
         SurfaceHolder surfaceViewHolder = surfaceView.getHolder();
 
         mCamera = Camera.open(mCameraId);
         mParameters = mCamera.getParameters();
+
+        onProcedureCallback.onProcedure(canSwitchResolution());
 
         try {
             mCamera.setPreviewDisplay(surfaceViewHolder);
@@ -60,7 +70,10 @@ public class Camera1Lens implements CameraLens {
 
     private ResolutionSwitcher resolutionSwitcher = new ResolutionSwitcher() {
         @Override
-        public void switchTo(Resolution resolution, OperatorListener<Resolution> listener) {
+        public void switchTo(Resolution resolution, OperatorCallback<Resolution> callback) {
+            mParameters.setPreviewSize(resolution.size.getWidth(), resolution.size.getHeight());
+            mCamera.setParameters(mParameters);
+            mHandler.post(() -> callback.onSuccess(resolution));
         }
 
         @Override

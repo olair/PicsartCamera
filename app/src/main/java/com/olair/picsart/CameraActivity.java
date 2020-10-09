@@ -2,6 +2,7 @@ package com.olair.picsart;
 
 import android.Manifest;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,8 +82,17 @@ public class CameraActivity extends BaseActivity<ActivityCameraBinding> {
     }
 
     private void startPreview() {
-        camera1Lens = new Camera1Lens(1);
-        camera1Lens.open(viewBinding.surfvCamera);
+        camera1Lens = new Camera1Lens(1, 90, new Handler());
+        camera1Lens.open(viewBinding.surfvCamera, operator -> {
+            List<Resolution> previewSizeList = operator.getPreviewSizeList();
+            Resolution targetPreviewSize = previewSizeList.get(0);
+            operator.switchTo(targetPreviewSize, param -> {
+                ViewGroup.LayoutParams layoutParams = viewBinding.surfvCamera.getLayoutParams();
+                layoutParams.width = param.size.getWidth();
+                layoutParams.height = param.size.getHeight();
+                viewBinding.surfvCamera.setLayoutParams(layoutParams);
+            });
+        });
     }
 
     private SurfaceHolder.Callback surfvHolderCallback = new SurfaceHolder.Callback() {

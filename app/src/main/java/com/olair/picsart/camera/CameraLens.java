@@ -16,7 +16,7 @@ public interface CameraLens {
      *
      * @param surfaceView 图传目标
      */
-    void open(SurfaceView surfaceView);
+    void open(SurfaceView surfaceView, OnProcedureCallback<ResolutionSwitcher> onProcedureCallback);
 
     /**
      * 关闭图传
@@ -35,7 +35,7 @@ public interface CameraLens {
      */
     interface ResolutionSwitcher {
 
-        void switchTo(Resolution resolution, OperatorListener<Resolution> listener);
+        void switchTo(Resolution resolution, OperatorCallback<Resolution> callback);
 
         List<Resolution> getPreviewSizeList();
 
@@ -43,11 +43,16 @@ public interface CameraLens {
 
     }
 
-    interface OperatorListener<T> {
+    interface OnProcedureCallback<T> {
+        void onProcedure(T operator);
+    }
+
+    interface OperatorCallback<T> {
 
         void onSuccess(T param);
 
-        void onError(Throwable throwable);
+        default void onError(Throwable throwable) {
+        }
     }
 
 
