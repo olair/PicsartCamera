@@ -68,6 +68,11 @@ public class Camera1Lens implements CameraLens {
         return resolutionSwitcher;
     }
 
+    @Override
+    public FlashLampSwitcher canSwitchFlashLamp() {
+        return null;
+    }
+
     private ResolutionSwitcher resolutionSwitcher = new ResolutionSwitcher() {
         @Override
         public void switchTo(Resolution resolution, OperatorCallback<Resolution> callback) {

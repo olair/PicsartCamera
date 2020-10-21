@@ -31,6 +31,13 @@ public interface CameraLens {
     ResolutionSwitcher canSwitchResolution();
 
     /**
+     * 是否可以切闪光灯（假想每一个类型是一个单独的灯）
+     *
+     * @return true 可以
+     */
+    FlashLampSwitcher canSwitchFlashLamp();
+
+    /**
      * 分辨率切换
      */
     interface ResolutionSwitcher {
@@ -40,6 +47,33 @@ public interface CameraLens {
         List<Resolution> getPreviewSizeList();
 
         List<Resolution> getVideoSizeList();
+
+    }
+
+    interface FlashLampSwitcher {
+
+        void switchTo(FlashLamp lamp, OperatorCallback<FlashLamp> callback);
+
+        /**
+         * 支持的闪光灯列表
+         */
+        List<FlashLamp> getFlashLampList();
+    }
+
+    interface canRecord {
+
+        void record(String outPath, Resolution resolution);
+
+    }
+
+    interface canTake {
+
+        void take(String outPath);
+
+        /**
+         * TODO 需要一个策略，比如AEB/连拍等，需要提供一些初始化支持，考虑是在策略内直接支持还是交给外部定义
+         */
+        void takeGroup(String outDir);
 
     }
 
