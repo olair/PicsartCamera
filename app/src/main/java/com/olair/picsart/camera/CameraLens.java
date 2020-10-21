@@ -31,6 +31,13 @@ public interface CameraLens {
     ResolutionSwitcher canSwitchResolution();
 
     /**
+     * 是否可以切闪光灯（假想每一个类型是一个单独的灯）
+     *
+     * @return true 可以
+     */
+    FlashLampSwitcher canSwitchFlashLamp();
+
+    /**
      * 分辨率切换
      */
     interface ResolutionSwitcher {
@@ -41,6 +48,16 @@ public interface CameraLens {
 
         List<Resolution> getVideoSizeList();
 
+    }
+
+    interface FlashLampSwitcher {
+
+        void switchTo(FlashLamp lamp, OperatorCallback<FlashLamp> callback);
+
+        /**
+         * 支持的闪光灯列表
+         */
+        List<FlashLamp> getFlashLampList();
     }
 
     interface OnProcedureCallback<T> {
