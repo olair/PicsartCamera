@@ -60,6 +60,23 @@ public interface CameraLens {
         List<FlashLamp> getFlashLampList();
     }
 
+    interface canRecord {
+
+        void record(String outPath, Resolution resolution);
+
+    }
+
+    interface canTake {
+
+        void take(String outPath);
+
+        /**
+         * TODO 需要一个策略，比如AEB/连拍等，需要提供一些初始化支持，考虑是在策略内直接支持还是交给外部定义
+         */
+        void takeGroup(String outDir);
+
+    }
+
     interface OnProcedureCallback<T> {
         void onProcedure(T operator);
     }
