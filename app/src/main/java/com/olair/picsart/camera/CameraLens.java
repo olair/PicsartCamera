@@ -37,6 +37,10 @@ public interface CameraLens {
      */
     FlashLampSwitcher canSwitchFlashLamp();
 
+    Recorder canRecode();
+
+    Taker canTake();
+
     /**
      * 分辨率切换
      */
@@ -60,13 +64,13 @@ public interface CameraLens {
         List<FlashLamp> getFlashLampList();
     }
 
-    interface canRecord {
+    interface Recorder {
 
         void record(String outPath, Resolution resolution);
 
     }
 
-    interface canTake {
+    interface Taker {
 
         void take(String outPath);
 

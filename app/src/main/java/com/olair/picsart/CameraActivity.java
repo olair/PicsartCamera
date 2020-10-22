@@ -37,7 +37,7 @@ public class CameraActivity extends BaseActivity<ActivityCameraBinding> {
 
         //noinspection ResultOfMethodCallIgnored
         new RxPermissions(this)
-                .request(Manifest.permission.CAMERA)
+                .request(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribe(agree -> {
                     if (agree) {
                         viewBinding.surfvCamera.getHolder().addCallback(surfvHolderCallback);
@@ -78,6 +78,11 @@ public class CameraActivity extends BaseActivity<ActivityCameraBinding> {
                 popupWindow.showAsDropDown(viewBinding.btnSwitchResolution);
 
             }
+        });
+
+        viewBinding.btnTakePicture.setOnClickListener(v -> {
+            CameraLens.Taker taker = camera1Lens.canTake();
+            taker.take("/sdcard");
         });
     }
 
