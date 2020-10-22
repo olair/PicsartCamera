@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.olair.utils.FileUtil;
 import com.olair.utils.SizeUtil;
 
 import java.io.IOException;
@@ -71,6 +72,27 @@ public class Camera1Lens implements CameraLens {
     @Override
     public FlashLampSwitcher canSwitchFlashLamp() {
         return null;
+    }
+
+    @Override
+    public Recorder canRecode() {
+        return null;
+    }
+
+    @Override
+    public Taker canTake() {
+        return new Taker() {
+            @Override
+            public void take(String outPath) {
+                mCamera.takePicture(null, null, null, (data, camera) ->
+                        FileUtil.saveToFile(data, outPath, "test.jpg"));
+            }
+
+            @Override
+            public void takeGroup(String outDir) {
+
+            }
+        };
     }
 
     private ResolutionSwitcher resolutionSwitcher = new ResolutionSwitcher() {
