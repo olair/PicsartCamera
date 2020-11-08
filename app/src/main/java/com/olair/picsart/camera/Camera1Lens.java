@@ -5,12 +5,18 @@ import android.os.Handler;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.olair.picsart.camera.utils.CameraSchedulers;
 import com.olair.utils.FileUtil;
 import com.olair.utils.SizeUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.FutureTask;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.SingleOnSubscribe;
 
 /**
  * Created by olair on 20.9.12.
@@ -83,14 +89,21 @@ public class Camera1Lens implements CameraLens {
     public Taker canTake() {
         return new Taker() {
             @Override
-            public void take(String outPath) {
-                mCamera.takePicture(null, null, null, (data, camera) ->
-                        FileUtil.saveToFile(data, outPath, "test.jpg"));
+            public Single<Result> take(String outDir, String fileName) {
+                return Single.create(
+                        (SingleOnSubscribe<Result>) emitter ->
+                                mCamera.takePicture(null, null, null,
+                                        ((data, camera) -> {
+                                            FileUtil.saveToFile(data, outDir, fileName);
+                                            emitter.onSuccess(new Result(outDir, fileName));
+                                        })))
+                        .subscribeOn(CameraSchedulers.background())
+                        .observeOn(AndroidSchedulers.mainThread());
             }
 
             @Override
-            public void takeGroup(String outDir) {
-
+            public FutureTask<String> takeGroup(String outDir) {
+                return null;
             }
         };
     }

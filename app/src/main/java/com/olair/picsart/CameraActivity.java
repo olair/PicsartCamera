@@ -82,7 +82,7 @@ public class CameraActivity extends BaseActivity<ActivityCameraBinding> {
 
         viewBinding.btnTakePicture.setOnClickListener(v -> {
             CameraLens.Taker taker = camera1Lens.canTake();
-            taker.take("/sdcard");
+            taker.take("/sdcard", "test.jpg");
         });
     }
 

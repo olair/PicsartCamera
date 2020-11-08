@@ -2,7 +2,11 @@ package com.olair.picsart.camera;
 
 import android.view.SurfaceView;
 
+import java.io.File;
 import java.util.List;
+import java.util.concurrent.FutureTask;
+
+import io.reactivex.rxjava3.core.Single;
 
 
 /**
@@ -72,13 +76,22 @@ public interface CameraLens {
 
     interface Taker {
 
-        void take(String outPath);
+        Single<Result> take(String outPath, String fileName);
 
         /**
          * TODO 需要一个策略，比如AEB/连拍等，需要提供一些初始化支持，考虑是在策略内直接支持还是交给外部定义
          */
-        void takeGroup(String outDir);
+        FutureTask<String> takeGroup(String outDir);
 
+        class Result {
+
+            private final File file;
+
+            public Result(String dir, String fileName) {
+                this.file = new File(dir, fileName);
+            }
+
+        }
     }
 
     interface OnProcedureCallback<T> {
