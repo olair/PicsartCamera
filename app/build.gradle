@@ -38,10 +38,17 @@ dependencies {
 
     // rx java
     implementation "io.reactivex.rxjava3:rxjava:3.0.4"
-    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation("io.reactivex.rxjava3:rxkotlin:3.0.0") {
+        exclude group: 'io.reactivex.rxjava3', module: 'rxjava'
+    }
+    implementation('io.reactivex.rxjava3:rxandroid:3.0.0') {
+        exclude group: 'io.reactivex.rxjava3', module: 'rxjava'
+    }
 
     // rx permissions
-    implementation 'com.github.tbruyelle:rxpermissions:0.12'
+    implementation('com.github.tbruyelle:rxpermissions:0.12') {
+        exclude group: 'io.reactivex.rxjava3', module: 'rxjava'
+    }
 
     // 测试
     testImplementation 'junit:junit:4.12'
